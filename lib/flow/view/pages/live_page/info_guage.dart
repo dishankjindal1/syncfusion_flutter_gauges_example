@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:pulgas_power/flow/domain/entity/live_data_entity.dart';
+import 'package:pulgas_power/flow/domain/enum/live_enums.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
 
 class PPInfoGuage extends StatelessWidget {
   const PPInfoGuage({
-    required this.data,
+    required this.type,
+    required this.value,
+    required this.valueWithSymbol,
     super.key,
   });
 
-  final PPLiveDataEntity data;
+  final LiveDataType type;
+  final double value;
+  final String valueWithSymbol;
 
   @override
   Widget build(BuildContext context) {
@@ -26,14 +30,14 @@ class PPInfoGuage extends StatelessWidget {
           child: SfRadialGauge(
             enableLoadingAnimation: true,
             title: GaugeTitle(
-              text: data.type.chartTitle,
+              text: type.chartTitle,
             ),
             axes: [
               RadialAxis(
                   canRotateLabels: true,
-                  minimum: data.type.startRange.toDouble(),
-                  maximum: data.type.endRange.toDouble(),
-                  maximumLabels: data.type.rangeType.isNoColor ? 5 : 3,
+                  minimum: type.startRange.toDouble(),
+                  maximum: type.endRange.toDouble(),
+                  maximumLabels: type.rangeType.isNoColor ? 5 : 3,
                   numberFormat: NumberFormat.decimalPattern(),
                   startAngle: 150,
                   endAngle: 390,
@@ -51,17 +55,17 @@ class PPInfoGuage extends StatelessWidget {
                     length: 0,
                   ),
                   ranges: [
-                    if (data.type.rangeType.isNoColor)
+                    if (type.rangeType.isNoColor)
                       GaugeRange(
-                        startValue: data.type.startRange.toDouble(),
-                        endValue: data.type.endRange.toDouble(),
+                        startValue: type.startRange.toDouble(),
+                        endValue: type.endRange.toDouble(),
                         startWidth: gaugeWidth,
                         endWidth: gaugeWidth,
                         color: Colors.white,
                       )
                     else ...[
-                      if (data.type.rangeType.isMultiColor)
-                        for (final range in data.type.ranges!)
+                      if (type.rangeType.isMultiColor)
+                        for (final range in type.ranges!)
                           GaugeRange(
                             startValue: range.$1.toDouble(),
                             endValue: range.$2.toDouble(),
@@ -72,19 +76,19 @@ class PPInfoGuage extends StatelessWidget {
                       else
                         GaugeRange(
                           startValue: 0,
-                          endValue: data.value.toDouble(),
+                          endValue: value,
                           startWidth: gaugeWidth,
                           endWidth: gaugeWidth,
                           color: Colors.green,
                         ),
 
                       /// Add the black pointer on the guage strip
-                      if (data.stickyPoint != null)
+                      if (type.stickyPointerPosition != null)
                         GaugeRange(
-                          startValue: data.stickyPoint!.toDouble() -
-                              (data.type.stickyTickerSize! ~/ 2),
-                          endValue: data.stickyPoint!.toDouble() +
-                              (data.type.stickyTickerSize! ~/ 2),
+                          startValue: type.stickyPointerPosition!.toDouble() -
+                              (type.stickyPointerSize! ~/ 2),
+                          endValue: type.stickyPointerPosition!.toDouble() +
+                              (type.stickyPointerSize! ~/ 2),
                           startWidth: gaugeWidth,
                           endWidth: gaugeWidth,
                           color: Colors.black54,
@@ -94,12 +98,12 @@ class PPInfoGuage extends StatelessWidget {
                   pointers: [
                     NeedlePointer(
                       enableAnimation: true,
-                      needleLength: data.type.isBatterEnergy
+                      needleLength: type.isBatterEnergy
                           ? 0.7
-                          : data.type.startRange.isNegative
+                          : type.startRange.isNegative
                               ? 0.715
                               : 0.73,
-                      value: data.value.toDouble(),
+                      value: value,
                       needleEndWidth: 4,
                     ),
                   ],
@@ -111,15 +115,15 @@ class PPInfoGuage extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                data.type.unitType.label,
+                                type.unitType.label,
                                 style: const TextStyle(
-                                  fontSize: 24,
+                                  fontSize: 20,
                                 ),
                               ),
                               Text(
-                                data.valueWithSymbol,
+                                valueWithSymbol,
                                 style: const TextStyle(
-                                  fontSize: 24,
+                                  fontSize: 20,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),

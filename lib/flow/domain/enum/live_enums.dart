@@ -30,6 +30,7 @@ enum LiveDataType {
     OutputRangeType.RANGE_MOVES_WITH_POINTER,
     null,
     null,
+    null,
   ),
   SOLAR_OUTPUT(
     'Solar Output',
@@ -37,6 +38,7 @@ enum LiveDataType {
     0,
     650,
     OutputRangeType.RANGE_MOVES_WITH_POINTER,
+    null,
     null,
     null,
   ),
@@ -48,6 +50,7 @@ enum LiveDataType {
     OutputRangeType.RANGE_MOVES_WITH_POINTER,
     null,
     null,
+    null,
   ),
   GENERATOR(
     'Generator',
@@ -55,6 +58,7 @@ enum LiveDataType {
     0,
     400,
     OutputRangeType.RANGE_MOVES_WITH_POINTER,
+    null,
     null,
     null,
   ),
@@ -72,6 +76,7 @@ enum LiveDataType {
       (583, 600, Colors.red),
     ],
     2,
+    520,
   ),
   BATTERY_CURRENT(
     'Battery Current',
@@ -85,6 +90,7 @@ enum LiveDataType {
       (550, 600, Colors.yellow),
     ],
     10,
+    0,
   ),
   BATTERY_CHARGE(
     'Battery Charge',
@@ -98,6 +104,7 @@ enum LiveDataType {
       (325, 350, Colors.yellow),
     ],
     6,
+    0,
   ),
   BATTERY_ENERGY(
     'Battery Energy',
@@ -106,7 +113,8 @@ enum LiveDataType {
     2000,
     OutputRangeType.RANGE_WITH_NO_COLOR,
     null,
-    10,
+    null,
+    null,
   );
 
   factory LiveDataType.fromString(final String value) {
@@ -130,7 +138,8 @@ enum LiveDataType {
     this.endRange,
     this.rangeType,
     this.ranges,
-    this.stickyTickerSize,
+    this.stickyPointerSize,
+    this.stickyPointerPosition,
   )   : assert(startRange < endRange),
         assert(rangeType == OutputRangeType.RANGE_WITH_MULTIPLE_COLORS
             ? ranges != null
@@ -138,11 +147,12 @@ enum LiveDataType {
 
   final String chartTitle;
   final OutputUnitType unitType;
-  final int startRange;
-  final int endRange;
+  final double startRange;
+  final double endRange;
   final OutputRangeType rangeType;
-  final List<(int, int, Color)>? ranges;
-  final int? stickyTickerSize;
+  final List<(double, double, Color)>? ranges;
+  final double? stickyPointerSize;
+  final double? stickyPointerPosition;
 
   bool get isBatterEnergy => this == LiveDataType.BATTERY_ENERGY;
 }

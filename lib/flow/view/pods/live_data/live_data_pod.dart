@@ -9,19 +9,36 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'live_data_pod.g.dart';
 
 @riverpod
-Future<List<PPLiveDataEntity>> liveData(Ref ref) async {
-  final result = [
-    for (final i in LiveDataType.values)
-      {
-        'type': i.name,
-        'value': i.startRange + Random().nextInt(i.endRange - i.startRange),
-        'stickyPoint': i.name.contains('BATTERY')
-            ? i.startRange + Random().nextInt(i.endRange)
-            : null
-      }
-  ];
+Future<PPLiveDataEntity> liveData(Ref ref) async {
+  final result = {
+    'avv': LiveDataType.AVAILABLE.startRange +
+        Random().nextInt((LiveDataType.AVAILABLE.endRange -
+            LiveDataType.AVAILABLE.startRange).toInt()).toDouble(),
+    'soo': LiveDataType.SOLAR_OUTPUT.startRange +
+        Random().nextInt((LiveDataType.SOLAR_OUTPUT.endRange -
+            LiveDataType.SOLAR_OUTPUT.startRange).toInt()),
+    'pcs': LiveDataType.PCS.startRange +
+        Random()
+            .nextInt((LiveDataType.PCS.endRange - LiveDataType.PCS.startRange).toInt()),
+    'gnr': LiveDataType.GENERATOR.startRange +
+        Random().nextInt((LiveDataType.GENERATOR.endRange -
+            LiveDataType.GENERATOR.startRange).toInt()),
+    'bvo': LiveDataType.BATTERY_VOLTAGE.startRange +
+        Random().nextInt((LiveDataType.BATTERY_VOLTAGE.endRange -
+            LiveDataType.BATTERY_VOLTAGE.startRange).toInt()),
+    'boc': LiveDataType.BATTERY_CURRENT.startRange +
+        Random().nextInt((LiveDataType.BATTERY_CURRENT.endRange -
+            LiveDataType.BATTERY_CURRENT.startRange).toInt()),
+    'bch': LiveDataType.BATTERY_CHARGE.startRange +
+        Random().nextInt((LiveDataType.BATTERY_CHARGE.endRange -
+            LiveDataType.BATTERY_CHARGE.startRange).toInt()),
+    'ben': LiveDataType.BATTERY_ENERGY.startRange +
+        Random().nextInt((LiveDataType.BATTERY_ENERGY.endRange -
+            LiveDataType.BATTERY_ENERGY.startRange).toInt()),
+    'lup': DateTime.now().millisecondsSinceEpoch,
+  };
 
   await Future.delayed(const Duration(seconds: 2));
 
-  return result.map((e) => PPLiveDataModel.fromMap(e)).toList();
+  return PPLiveDataModel.fromMap(result);
 }

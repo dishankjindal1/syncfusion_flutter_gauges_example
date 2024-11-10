@@ -6,7 +6,7 @@ part of 'daily_data_pod.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$dailyDataHash() => r'40c9b377b0c20981202bf272cd083342c95b91e7';
+String _$dailyDataHash() => r'39ab8414749c2632c6d95ce0809373ecd54d5fb7';
 
 /// See also [dailyData].
 @ProviderFor(dailyData)
