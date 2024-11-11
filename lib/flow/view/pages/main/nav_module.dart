@@ -55,12 +55,9 @@ class NavModule extends ConsumerWidget {
                         e.$3,
                         color: Colors.black,
                       ),
-                      selectedIcon: Container(
-                        color: Colors.amber,
-                        child: Icon(
-                          e.$3,
-                          color: Theme.of(context).appBarTheme.backgroundColor,
-                        ),
+                      selectedIcon: Icon(
+                        e.$3,
+                        color: Theme.of(context).appBarTheme.backgroundColor,
                       ),
                       label: Text(e.$2),
                     ),
