@@ -2,10 +2,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pulgas_power/flow/domain/entity/daily_data_entity.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'daily_data_pod.g.dart';
+part 'daily_viewmodel.g.dart';
 
 @riverpod
-Future<PPDailyDataEntity> dailyData(Ref ref) async {
+Future<PPDailyDataEntity> dailyViewModel(Ref ref) async {
   await Future.delayed(const Duration(seconds: 2));
 
   return PPDailyDataEntity(

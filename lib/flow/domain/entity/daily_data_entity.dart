@@ -41,7 +41,8 @@ class PPDailyDataEntity extends Equatable {
   String get consumptionWithSymbol => '$consumption kWh';
   String get co2SavedWithSymbol => '$co2Saved TON';
   String get co2ProducedWithSymbol => '${co2Produced.toStringAsFixed(3)} TON';
-  String get displayReportedAt => DateFormat('dd MMM yyyy').format(reportedAt);
+  String get displayReportedAt =>
+      DateFormat('dd-MM-yyyy hh:mm:ss').format(reportedAt);
 
   List<(String, String)> get listOfData => [
         ('Solar Production', solarProductionWithSymbol),

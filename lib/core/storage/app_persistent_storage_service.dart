@@ -27,6 +27,7 @@ class AppPersistentStorageService {
         accessibility: KeychainAccessibility.first_unlock,
       ),
     );
+
     Hive.init(_appDirectory.path);
 
     final prefs = await SharedPreferences.getInstance();

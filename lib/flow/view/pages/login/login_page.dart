@@ -1,30 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:pulgas_power/flow/view/pages/live_page/live_page.dart';
+import 'package:pulgas_power/core/auth/auth_data.dart';
+import 'package:pulgas_power/core/mixin/app_storage_mixin.dart';
+import 'package:pulgas_power/flow/view/app.dart';
 
-class PPLoginPage extends StatefulWidget {
+class PPLoginPage extends StatelessWidget with AppStorageMixin {
   const PPLoginPage({super.key});
 
-  static pushReplacement(final BuildContext context) {
-    Navigator.pushReplacement(context,
-        PageRouteBuilder(pageBuilder: (context, a, b) {
-      return const PPLoginPage();
-    }));
-  }
-
-  @override
-  State<PPLoginPage> createState() => _PPLoginPageState();
-}
-
-class _PPLoginPageState extends State<PPLoginPage> {
-  final _formKey = GlobalKey<FormState>();
-
-  @override
-  void initState() {
-    super.initState();
-
-    // Check if authorized or not
-    // PPLivePage.pushReplacement(context);
-  }
+  static final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +41,7 @@ class _PPLoginPageState extends State<PPLoginPage> {
                         children: [
                           TextFormField(
                             decoration: const InputDecoration(
-                              hintText: 'Email',
+                              hintText: 'Username',
                               filled: true,
                               fillColor: Color(0xFFF5FCF9),
                               contentPadding: EdgeInsets.symmetric(
@@ -70,7 +52,7 @@ class _PPLoginPageState extends State<PPLoginPage> {
                               ),
                             ),
                             keyboardType: TextInputType.emailAddress,
-                            onSaved: (emailAddress) {
+                            onSaved: (username) {
                               // Save it
                             },
                           ),
@@ -83,7 +65,9 @@ class _PPLoginPageState extends State<PPLoginPage> {
                                 filled: true,
                                 fillColor: Color(0xFFF5FCF9),
                                 contentPadding: EdgeInsets.symmetric(
-                                    horizontal: 16.0 * 1.5, vertical: 16.0),
+                                  horizontal: 16.0 * 1.5,
+                                  vertical: 16.0,
+                                ),
                                 border: OutlineInputBorder(
                                   borderRadius:
                                       BorderRadius.all(Radius.circular(50)),
@@ -98,7 +82,10 @@ class _PPLoginPageState extends State<PPLoginPage> {
                             onPressed: () {
                               if (_formKey.currentState!.validate()) {
                                 _formKey.currentState!.save();
-                                PPLivePage.pushReplacement(context);
+                                getRef<AuthData>()
+                                  ..aKey = 'authorized'
+                                  ..save();
+                                PPMain.pushReplacement(context);
                               }
                             },
                             style: ElevatedButton.styleFrom(
@@ -108,7 +95,7 @@ class _PPLoginPageState extends State<PPLoginPage> {
                               minimumSize: const Size(double.infinity, 48),
                               shape: const StadiumBorder(),
                             ),
-                            child: const Text("Sign in"),
+                            child: const Text('Sign in'),
                           ),
                         ],
                       ),
