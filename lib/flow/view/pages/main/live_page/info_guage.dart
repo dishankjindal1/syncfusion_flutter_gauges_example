@@ -65,7 +65,7 @@ class PPInfoGuage extends StatelessWidget {
                 showFirstLabel: true,
                 labelsPosition: ElementsPosition.outside,
                 ticksPosition: ElementsPosition.outside,
-                axisLineStyle: AxisLineStyle(
+                axisLineStyle: const AxisLineStyle(
                   thickness: gaugeWidth,
                 ),
                 majorTickStyle: const MajorTickStyle(
@@ -74,7 +74,7 @@ class PPInfoGuage extends StatelessWidget {
                 minorTickStyle: const MinorTickStyle(
                   length: 0,
                 ),
-                axisLabelStyle: GaugeTextStyle(
+                axisLabelStyle: const GaugeTextStyle(
                   fontSize: gaugeWidth * 0.5,
                 ),
                 ranges: [
@@ -138,14 +138,14 @@ class PPInfoGuage extends StatelessWidget {
                               child: Text(
                                 type.unitType.label,
                                 overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
+                                style: const TextStyle(
                                   fontSize: gaugeWidth * 0.75,
                                 ),
                               ),
                             ),
                             Text(
                               valueWithSymbol,
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontSize: gaugeWidth * 0.75,
                                 fontWeight: FontWeight.bold,
                               ),

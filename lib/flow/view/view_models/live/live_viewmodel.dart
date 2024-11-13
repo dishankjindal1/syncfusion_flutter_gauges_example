@@ -8,7 +8,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'live_viewmodel.g.dart';
 
-@riverpod
+@Riverpod(keepAlive: true)
 Future<PPLiveDataEntity> liveViewModel(Ref ref) async {
   final result = {
     'avv': LiveDataType.AVAILABLE.startRange +

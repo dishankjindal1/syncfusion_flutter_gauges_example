@@ -4,11 +4,9 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'daily_viewmodel.g.dart';
 
-@riverpod
+@Riverpod(keepAlive: true)
 Future<PPDailyDataEntity> dailyViewModel(Ref ref) async {
-  await Future.delayed(const Duration(seconds: 2));
-
-  return PPDailyDataEntity(
+  final result = PPDailyDataEntity(
     solarProduction: 2424,
     renewableHours: 6.1,
     batteryCharge: -1533,
@@ -22,4 +20,8 @@ Future<PPDailyDataEntity> dailyViewModel(Ref ref) async {
     co2Produced: 0.860,
     reportedAt: DateTime.now(),
   );
+
+  await Future.delayed(const Duration(seconds: 2));
+
+  return result;
 }

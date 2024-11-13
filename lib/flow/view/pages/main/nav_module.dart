@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pulgas_power/flow/view/pages/main/live_page/live_page.dart';
 import 'package:pulgas_power/flow/view/pages/main/daily_page/daily_page.dart';
 import 'package:pulgas_power/flow/view/pages/main/setting_page/setting_page.dart';
-import 'package:pulgas_power/flow/view/view_models/nav/nav_viewmodel.dart';
+import 'package:pulgas_power/flow/view/pods/nav/nav_index_pod.dart';
 
 class NavModule extends ConsumerWidget {
   const NavModule.portrait({super.key}) : isPortrait = true;
@@ -23,16 +23,18 @@ class NavModule extends ConsumerWidget {
     if (isPortrait) {
       return MediaQuery.sizeOf(context).aspectRatio < 1
           ? BottomNavigationBar(
-              showSelectedLabels: false,
-              showUnselectedLabels: false,
-              currentIndex: ref.watch(navViewModelProvider),
+              showSelectedLabels: true,
+              showUnselectedLabels: true,
+              selectedItemColor: Colors.black,
+              unselectedItemColor: Colors.black26,
+              currentIndex: ref.watch(navIndexPodProvider),
               items: _pages
                   .map(
                     (e) => BottomNavigationBarItem(
                       label: e.$2,
                       icon: Icon(
                         e.$3,
-                        color: Colors.black,
+                        color: Colors.black26,
                       ),
                       activeIcon: Icon(
                         e.$3,
@@ -42,7 +44,7 @@ class NavModule extends ConsumerWidget {
                     ),
                   )
                   .toList(),
-              onTap: ref.read(navViewModelProvider.notifier).updateIndex,
+              onTap: ref.read(navIndexPodProvider.notifier).updateIndex,
             )
           : const SizedBox.shrink();
     } else {
@@ -63,9 +65,9 @@ class NavModule extends ConsumerWidget {
                     ),
                   )
                   .toList(),
-              selectedIndex: ref.watch(navViewModelProvider),
+              selectedIndex: ref.watch(navIndexPodProvider),
               onDestinationSelected:
-                  ref.read(navViewModelProvider.notifier).updateIndex,
+                  ref.read(navIndexPodProvider.notifier).updateIndex,
             )
           : const SizedBox.shrink();
     }

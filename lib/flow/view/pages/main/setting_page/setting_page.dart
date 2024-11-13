@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:gap/gap.dart';
-import 'package:pulgas_power/core/auth/auth_data.dart';
 import 'package:pulgas_power/core/mixin/app_storage_mixin.dart';
-import 'package:pulgas_power/flow/view/app.dart';
+import 'package:pulgas_power/core/theme/theme.dart';
+import 'package:pulgas_power/flow/view/pages/main/app_drawer.dart';
 import 'package:pulgas_power/flow/view/pages/main/setting_page/input_widget.dart';
 import 'package:pulgas_power/flow/view/view_models/setting/setting_viewmodel.dart';
 
@@ -15,7 +14,10 @@ class PPSettingPage extends ConsumerWidget with AppStorageMixin {
     final entity = ref.watch(settingViewModelProvider);
 
     return Scaffold(
+      backgroundColor: const Color(PPTheme.appBgColor),
       appBar: AppBar(
+        backgroundColor: const Color(PPTheme.appBarColor),
+        centerTitle: false,
         title: const Text.rich(
           TextSpan(children: [
             TextSpan(text: 'Pulgas'),
@@ -24,9 +26,23 @@ class PPSettingPage extends ConsumerWidget with AppStorageMixin {
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
           ]),
-          style: TextStyle(fontSize: 24),
+          style: TextStyle(
+            color: Color(PPTheme.appBarHeaderColor),
+            fontSize: 24,
+          ),
         ),
+        actions: [
+          Builder(builder: (context) {
+            return IconButton(
+              onPressed: () {
+                Scaffold.of(context).openEndDrawer();
+              },
+              icon: const Icon(Icons.menu),
+            );
+          }),
+        ],
       ),
+      endDrawer: const AppDrawer(),
       body: Align(
         alignment: Alignment.topCenter,
         child: Container(
@@ -36,9 +52,8 @@ class PPSettingPage extends ConsumerWidget with AppStorageMixin {
           child: Column(
             children: [
               InputWidget(
-                isMandatory: true,
                 label: 'Remote IP',
-                value: entity.remoteIp,
+                value: entity.remoteIp ?? 'localhost',
                 callback: (final String? value) {
                   ref
                       .read(settingViewModelProvider.notifier)
@@ -50,9 +65,8 @@ class PPSettingPage extends ConsumerWidget with AppStorageMixin {
                 },
               ),
               InputWidget(
-                isMandatory: false,
                 label: 'Remote PORT',
-                value: entity.remotePort,
+                value: entity.remotePort ?? '443',
                 callback: (value) {
                   ref
                       .read(settingViewModelProvider.notifier)
@@ -63,44 +77,64 @@ class PPSettingPage extends ConsumerWidget with AppStorageMixin {
                       .showSnackBar(const SnackBar(content: Text('Updated!')));
                 },
               ),
-              const Spacer(),
-              const Gap(16),
-              Builder(builder: (context) {
-                return Container(
-                  color: Colors.transparent,
-                  width: double.maxFinite,
-                  margin: const EdgeInsets.symmetric(horizontal: 24),
-                  child: ElevatedButton(
-                    style: ButtonStyle(
-                      fixedSize:
-                          WidgetStateProperty.all(const Size.fromHeight(48)),
-                      backgroundColor: WidgetStateProperty.all(Colors.white),
-                      overlayColor: WidgetStateProperty.all(Colors.yellow),
-                      elevation: WidgetStateProperty.all(10),
-                    ),
-                    onPressed: () {
-                      getRef<AuthData>()
-                        ..aKey = null
-                        ..save().then((_) {
-                          if (context.mounted) {
-                            PPMain.pushReplacement(context);
-
-                            ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(content: Text('Logged out!')));
-                          }
-                        });
-                    },
-                    child: const Text(
-                      'Logout',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                );
-              }),
-              const Gap(16),
+              InputWidget(
+                type: TextInputType.phone,
+                label: 'Live Data Interval (in Seconds)',
+                value: entity.liveDataInterval?.inSeconds.toString() ?? '30',
+                callback: (value) {
+                  ref
+                      .read(settingViewModelProvider.notifier)
+                      .update(entity.copyWith(
+                        liveDataInterval: Duration(seconds: int.parse(value!)),
+                      )..save());
+                  ScaffoldMessenger.of(context)
+                      .showSnackBar(const SnackBar(content: Text('Updated!')));
+                },
+              ),
+              InputWidget(
+                type: TextInputType.phone,
+                label: 'Daily Figures Interval (in Seconds)',
+                value: entity.dailyFigureInterval?.inSeconds.toString() ?? '30',
+                callback: (value) {
+                  ref
+                      .read(settingViewModelProvider.notifier)
+                      .update(entity.copyWith(
+                        dailyFigureInterval:
+                            Duration(seconds: int.parse(value!)),
+                      )..save());
+                  ScaffoldMessenger.of(context)
+                      .showSnackBar(const SnackBar(content: Text('Updated!')));
+                },
+              ),
+              InputWidget(
+                type: TextInputType.phone,
+                label: 'Graphs Interval (in Seconds)',
+                value: entity.graphFigureInterval?.inSeconds.toString() ?? '30',
+                callback: (value) {
+                  ref
+                      .read(settingViewModelProvider.notifier)
+                      .update(entity.copyWith(
+                        graphFigureInterval:
+                            Duration(seconds: int.parse(value!)),
+                      )..save());
+                  ScaffoldMessenger.of(context)
+                      .showSnackBar(const SnackBar(content: Text('Updated!')));
+                },
+              ),
+              InputWidget(
+                type: TextInputType.phone,
+                label: 'Logs Interval (in Seconds)',
+                value: entity.logsInterval?.inSeconds.toString() ?? '30',
+                callback: (value) {
+                  ref
+                      .read(settingViewModelProvider.notifier)
+                      .update(entity.copyWith(
+                        logsInterval: Duration(seconds: int.parse(value!)),
+                      )..save());
+                  ScaffoldMessenger.of(context)
+                      .showSnackBar(const SnackBar(content: Text('Updated!')));
+                },
+              ),
             ],
           ),
         ),

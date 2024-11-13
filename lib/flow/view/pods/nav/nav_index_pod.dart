@@ -1,9 +1,9 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'nav_viewmodel.g.dart';
+part 'nav_index_pod.g.dart';
 
 @riverpod
-class NavViewModel extends _$NavViewModel {
+class NavIndexPod extends _$NavIndexPod {
   void updateIndex(final int index) => state = index;
 
   @override

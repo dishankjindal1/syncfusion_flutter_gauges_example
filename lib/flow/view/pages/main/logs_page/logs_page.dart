@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
+import 'package:gap/gap.dart';
+import 'package:intl/intl.dart';
 import 'package:pulgas_power/core/mixin/app_storage_mixin.dart';
+import 'package:pulgas_power/core/theme/theme.dart';
+import 'package:pulgas_power/flow/view/pages/main/app_drawer.dart';
+import 'package:pulgas_power/flow/view/view_models/logs/logs_viewmodel.dart';
 
 class PPLogsPage extends ConsumerWidget with AppStorageMixin {
   const PPLogsPage({super.key});
@@ -8,7 +14,10 @@ class PPLogsPage extends ConsumerWidget with AppStorageMixin {
   @override
   Widget build(final BuildContext context, final WidgetRef ref) {
     return Scaffold(
+      backgroundColor: const Color(PPTheme.appBgColor),
       appBar: AppBar(
+        backgroundColor: const Color(PPTheme.appBarColor),
+        centerTitle: false,
         title: const Text.rich(
           TextSpan(children: [
             TextSpan(text: 'Pulgas'),
@@ -17,19 +26,159 @@ class PPLogsPage extends ConsumerWidget with AppStorageMixin {
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
           ]),
-          style: TextStyle(fontSize: 24),
+          style: TextStyle(
+            color: Color(PPTheme.appBarHeaderColor),
+            fontSize: 24,
+          ),
         ),
+        actions: [
+          Builder(builder: (context) {
+            return IconButton(
+              onPressed: () {
+                Scaffold.of(context).openEndDrawer();
+              },
+              icon: const Icon(Icons.menu),
+            );
+          }),
+        ],
       ),
+      endDrawer: const AppDrawer(),
       body: Align(
         alignment: Alignment.topCenter,
         child: Container(
           constraints: const BoxConstraints(
             maxWidth: 500,
           ),
-          child: const Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+          child: Column(
             children: [
-              Text('Logs'),
+              Container(
+                padding: const EdgeInsets.all(20),
+                color: const Color(PPTheme.greyColor),
+                child: const Row(
+                  children: [
+                    Expanded(
+                        flex: 2,
+                        child: Text(
+                          'Data/Time',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        )),
+                    Gap(8),
+                    Expanded(
+                        child: Text(
+                      'Type',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    )),
+                    Gap(8),
+                    Expanded(
+                        flex: 3,
+                        child: Text(
+                          'Log Entry',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        )),
+                  ],
+                ),
+              ),
+              Expanded(
+                child: SafeArea(
+                  child: RefreshIndicator.adaptive(
+                    onRefresh: () async {
+                      ref.invalidate(const LogsViewModelFamily());
+                    },
+                    child: AnimationLimiter(
+                      child: ListView.builder(
+                        addAutomaticKeepAlives: false,
+                        itemBuilder: (context, index) {
+                          const pageLimit = 20;
+                          final pageNumber = index ~/ pageLimit;
+                          final indexInPage = index % pageLimit;
+
+                          final response = ref.watch(LogsViewModelProvider(
+                            pageNumber,
+                            pageLimit,
+                          ));
+
+                          return response.isRefreshing
+                              ? indexInPage == 0
+                                  ? const Center(
+                                      child: SizedBox(
+                                          height: 48,
+                                          child: CircularProgressIndicator
+                                              .adaptive()),
+                                    )
+                                  : null
+                              : response.when(
+                                  data: (data) {
+                                    final (date, type, entry) =
+                                        data.data![indexInPage];
+                                    return AnimationConfiguration.staggeredList(
+                                      position: index,
+                                      child: SlideAnimation(
+                                        verticalOffset: 400.0,
+                                        duration:
+                                            const Duration(milliseconds: 600),
+                                        child: ScaleAnimation(
+                                          child: Container(
+                                            padding: const EdgeInsets.all(20),
+                                            decoration: BoxDecoration(
+                                              color: index.isOdd
+                                                  ? const Color(
+                                                          PPTheme.greyColor)
+                                                      .withOpacity(0.5)
+                                                  : Colors.white,
+                                            ),
+                                            child: Row(
+                                              children: [
+                                                Expanded(
+                                                    flex: 2,
+                                                    child: Text(
+                                                      DateFormat(
+                                                              'dd-MM-yyyy hh:mm')
+                                                          .format(
+                                                              DateTime.parse(
+                                                                  date)),
+                                                    )),
+                                                const Gap(8),
+                                                Expanded(
+                                                    child: Text(
+                                                  type,
+                                                )),
+                                                const Gap(8),
+                                                Expanded(
+                                                    flex: 3,
+                                                    child: Text(
+                                                      entry,
+                                                    )),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                  error: (_, __) => indexInPage == 0
+                                      ? const Center(child: Text('Try Again'))
+                                      : const SizedBox.shrink(),
+                                  loading: () => indexInPage == 0
+                                      ? const Center(
+                                          child: SizedBox(
+                                              height: 48,
+                                              child: CircularProgressIndicator
+                                                  .adaptive()),
+                                        )
+                                      : null,
+                                );
+                        },
+                      ),
+                    ),
+                  ),
+                ),
+              ),
             ],
           ),
         ),

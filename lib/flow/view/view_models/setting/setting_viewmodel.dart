@@ -7,7 +7,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'setting_viewmodel.g.dart';
 
-@riverpod
+@Riverpod(keepAlive: true)
 class SettingViewModel extends _$SettingViewModel with AppStorageMixin {
   SettingEntity entity = const SettingEntity();
 

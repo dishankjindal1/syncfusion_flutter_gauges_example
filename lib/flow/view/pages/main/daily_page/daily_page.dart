@@ -1,22 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
+import 'package:pulgas_power/core/theme/theme.dart';
+import 'package:pulgas_power/flow/view/pages/main/app_drawer.dart';
 import 'package:pulgas_power/flow/view/pages/main/daily_page/info_linear.dart';
 import 'package:pulgas_power/flow/view/view_models/daily/daily_viewmodel.dart';
+import 'package:pulgas_power/flow/view/view_models/setting/setting_viewmodel.dart';
+import 'package:super_tooltip/super_tooltip.dart';
 
 class PPDailyPage extends ConsumerStatefulWidget {
   const PPDailyPage({super.key});
-
-  static push(final BuildContext context) {
-    Navigator.push(
-      context,
-      PageRouteBuilder(
-        transitionDuration: Duration.zero,
-        reverseTransitionDuration: Duration.zero,
-        pageBuilder: (context, a, b) => const PPDailyPage(),
-      ),
-    );
-  }
 
   @override
   ConsumerState<PPDailyPage> createState() => _PPDailyPageState();
@@ -24,6 +17,10 @@ class PPDailyPage extends ConsumerStatefulWidget {
 
 class _PPDailyPageState extends ConsumerState<PPDailyPage> {
   final scrollController = ScrollController();
+  final infoLinearData = [
+    (8.5, 'Stop Gen\n08:30', SuperTooltipController()),
+    (20.0, 'Now\n20:00', SuperTooltipController()),
+  ];
   bool isEdge = false;
 
   @override
@@ -31,9 +28,22 @@ class _PPDailyPageState extends ConsumerState<PPDailyPage> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback(
       (_) {
+        infinteLoop();
         scrollController.addListener(detectEdge);
       },
     );
+  }
+
+  void infinteLoop() async {
+    ref.invalidate(dailyViewModelProvider);
+
+    await Future.delayed(
+        ref.read(settingViewModelProvider).dailyFigureInterval ??
+            const Duration(seconds: 30));
+
+    if (mounted) {
+      infinteLoop();
+    }
   }
 
   void detectEdge() {
@@ -54,6 +64,7 @@ class _PPDailyPageState extends ConsumerState<PPDailyPage> {
 
   @override
   void dispose() {
+    infoLinearData.map((e) => e.$3.dispose());
     scrollController.removeListener(detectEdge);
     scrollController.dispose();
     super.dispose();
@@ -62,7 +73,10 @@ class _PPDailyPageState extends ConsumerState<PPDailyPage> {
   @override
   Widget build(final BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(PPTheme.appBgColor),
       appBar: AppBar(
+        backgroundColor: const Color(PPTheme.appBarColor),
+        centerTitle: false,
         title: const Text.rich(
           TextSpan(children: [
             TextSpan(text: 'Pulgas'),
@@ -71,23 +85,49 @@ class _PPDailyPageState extends ConsumerState<PPDailyPage> {
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
           ]),
-          style: TextStyle(fontSize: 24),
+          style: TextStyle(
+            color: Color(PPTheme.appBarHeaderColor),
+            fontSize: 24,
+          ),
         ),
+        actions: [
+          Builder(builder: (context) {
+            return IconButton(
+              onPressed: () {
+                Scaffold.of(context).openEndDrawer();
+              },
+              icon: const Icon(Icons.menu),
+            );
+          }),
+        ],
       ),
+      onEndDrawerChanged: (isOpened) {
+        if (mounted) {
+          setState(() {
+            if (isOpened) {
+              infoLinearData.map((e) => e.$3.hideTooltip());
+            } else {
+              infoLinearData.map((e) => e.$3.showTooltip());
+            }
+          });
+        }
+      },
+      endDrawer: const AppDrawer(),
       body: Scrollbar(
         controller: scrollController,
         child: ref.watch(dailyViewModelProvider).when(
               data: (data) => Column(
                 children: [
                   Expanded(
-                    child: RefreshIndicator(
+                    child: RefreshIndicator.adaptive(
                       onRefresh: () async {
                         ref.invalidate(dailyViewModelProvider);
-                        await Future.delayed(const Duration(seconds: 1));
                       },
                       child: Padding(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 24, vertical: 16.0),
+                          horizontal: 24,
+                          vertical: 16.0,
+                        ).copyWith(top: 8),
                         child: ScrollConfiguration(
                           behavior: ScrollConfiguration.of(context)
                               .copyWith(scrollbars: false),
@@ -164,10 +204,11 @@ class _PPDailyPageState extends ConsumerState<PPDailyPage> {
                                       ),
                                     ),
                                     const Gap(60),
-                                    const InfoLinear(),
+                                    InfoLinear(data: infoLinearData),
                                     const Gap(8),
                                     Image.network(
-                                        'https://picsum.photos/1920/1080')
+                                        'https://picsum.photos/1920/1080'),
+                                    const Gap(24),
                                   ],
                                 ),
                               ),
@@ -178,10 +219,12 @@ class _PPDailyPageState extends ConsumerState<PPDailyPage> {
                     ),
                   ),
                   Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 24,
+                      vertical: 8,
+                    ),
                     decoration: BoxDecoration(
-                      color: Theme.of(context).scaffoldBackgroundColor,
+                      color: const Color(PPTheme.appBgColor),
                       boxShadow: isEdge ? null : kElevationToShadow[4],
                     ),
                     child: SafeArea(
@@ -207,7 +250,7 @@ class _PPDailyPageState extends ConsumerState<PPDailyPage> {
                         ],
                       ),
                     ),
-                  )
+                  ),
                 ],
               ),
               error: (_, __) => const Center(

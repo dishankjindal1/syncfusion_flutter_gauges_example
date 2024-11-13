@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pulgas_power/core/theme/theme.dart';
+import 'package:pulgas_power/flow/view/pages/main/app_drawer.dart';
 import 'package:pulgas_power/flow/view/pages/main/live_page/info_guage.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:pulgas_power/flow/view/view_models/live/live_viewmodel.dart';
+import 'package:pulgas_power/flow/view/view_models/setting/setting_viewmodel.dart';
 
 class PPLivePage extends ConsumerStatefulWidget {
   const PPLivePage({super.key});
@@ -14,7 +17,6 @@ class PPLivePage extends ConsumerStatefulWidget {
 class _PPLivePageState extends ConsumerState<PPLivePage> {
   final ScrollController scrollController = ScrollController();
   bool isEdge = false;
-  DateTime reportedAd = DateTime.now();
   @override
   void initState() {
     super.initState();
@@ -44,12 +46,11 @@ class _PPLivePageState extends ConsumerState<PPLivePage> {
   }
 
   void infinteLoop() async {
-    await Future.delayed(const Duration(seconds: 10));
+    ref.invalidate(liveViewModelProvider);
+    await Future.delayed(ref.read(settingViewModelProvider).liveDataInterval ??
+        const Duration(seconds: 30));
 
     if (mounted) {
-      ref.invalidate(liveViewModelProvider);
-      reportedAd = DateTime.now();
-
       infinteLoop();
     }
   }
@@ -68,7 +69,10 @@ class _PPLivePageState extends ConsumerState<PPLivePage> {
     final isPortrait = ar < 1;
 
     return Scaffold(
+      backgroundColor: const Color(PPTheme.appBgColor),
       appBar: AppBar(
+        backgroundColor: const Color(PPTheme.appBarColor),
+        centerTitle: false,
         title: const Text.rich(
           TextSpan(children: [
             TextSpan(text: 'Pulgas'),
@@ -77,9 +81,23 @@ class _PPLivePageState extends ConsumerState<PPLivePage> {
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
           ]),
-          style: TextStyle(fontSize: 24),
+          style: TextStyle(
+            color: Color(PPTheme.appBarHeaderColor),
+            fontSize: 24,
+          ),
         ),
+        actions: [
+          Builder(builder: (context) {
+            return IconButton(
+              onPressed: () {
+                Scaffold.of(context).openEndDrawer();
+              },
+              icon: const Icon(Icons.menu),
+            );
+          }),
+        ],
       ),
+      endDrawer: const AppDrawer(),
       body: Scrollbar(
         controller: scrollController,
         child: ref.watch(liveViewModelProvider).when(
@@ -87,10 +105,9 @@ class _PPLivePageState extends ConsumerState<PPLivePage> {
                 return Column(
                   children: [
                     Expanded(
-                      child: RefreshIndicator(
+                      child: RefreshIndicator.adaptive(
                         onRefresh: () async {
                           ref.invalidate(liveViewModelProvider);
-                          await Future.delayed(const Duration(seconds: 1));
                         },
                         child: ScrollConfiguration(
                           behavior: ScrollConfiguration.of(context)
@@ -116,7 +133,8 @@ class _PPLivePageState extends ConsumerState<PPLivePage> {
                                     final (type, value, valueWithSymbol) =
                                         data.listOfData[index];
 
-                                    return AnimationConfiguration.staggeredList(
+                                    return AnimationConfiguration.staggeredGrid(
+                                      columnCount: isPortrait ? 2 : 4,
                                       position: index,
                                       duration:
                                           const Duration(milliseconds: 600),
@@ -143,12 +161,16 @@ class _PPLivePageState extends ConsumerState<PPLivePage> {
                     ),
                     Container(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 24, vertical: 8),
+                        horizontal: 24,
+                        vertical: 8,
+                      ),
                       decoration: BoxDecoration(
-                        color: Theme.of(context).scaffoldBackgroundColor,
+                        color: const Color(PPTheme.appBgColor),
                         boxShadow: isEdge ? null : kElevationToShadow[4],
                       ),
                       child: SafeArea(
+                        top: false,
+                        bottom: true,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [

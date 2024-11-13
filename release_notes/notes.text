@@ -1,0 +1,18 @@
+Hi Lei,
+
+Update:-
+1. Added the iOS styled refreh indicator. And also navigation logic and button styles.
+2. Removed the bottom nav ui, and added back the drawer ui with improved design.
+3. Completed the setting page config.
+4. Worked on logs page ui and pagination logic
+5. Interval based data fetching is working
+
+Clarification:-
+1. Do we need to keep username and password in the settings page? what's the purpose of preserving password and displaying it?
+
+Planning:-
+1. Api integration for the 2 apis
+2. Bug fix on the daily page, where the annotation marker is coming on top of drawer.
+
+Need:-
+1. Login based api to get the updated access token key

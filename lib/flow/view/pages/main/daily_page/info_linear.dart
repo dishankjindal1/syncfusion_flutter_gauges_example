@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:pulgas_power/core/theme/theme.dart';
 import 'package:super_tooltip/super_tooltip.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
 
 class InfoLinear extends StatelessWidget {
   const InfoLinear({
+    required this.data,
     super.key,
   });
+
+  final List<(double, String, SuperTooltipController)> data;
 
   @override
   Widget build(BuildContext context) {
@@ -50,14 +54,12 @@ class InfoLinear extends StatelessWidget {
           endValue: 24,
           startWidth: trackThickness,
           endWidth: trackThickness,
-          color: Color(0xFFD1D7DF),
+          color: Color(PPTheme.greyColor),
         ),
       ],
       markerPointers: [
-        for (final (double value, String msg, SuperTooltipController ctrl) in [
-          (8.5, 'Stop Gen\n08:30', SuperTooltipController()),
-          (20, 'Now\n20:00', SuperTooltipController()),
-        ])
+        for (final (double value, String msg, SuperTooltipController ctrl)
+            in data)
           LinearWidgetPointer(
             value: value,
             position: LinearElementPosition.outside,

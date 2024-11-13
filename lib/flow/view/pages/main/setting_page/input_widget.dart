@@ -63,60 +63,64 @@ class _InputWidgetState extends State<InputWidget> {
   }
 
   @override
-  Widget build(final BuildContext context) => Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
-        child: TextFormField(
-          keyboardType: widget.type,
-          readOnly: widget.callback == null,
-          controller: textEditingController,
-          inputFormatters: [
-            if (widget.type == TextInputType.phone)
-              LengthLimitingTextInputFormatter(10),
+  Widget build(final BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+      child: TextFormField(
+        keyboardType: widget.type,
+        readOnly: widget.callback == null,
+        controller: textEditingController,
+        inputFormatters: [
+          if (widget.type == TextInputType.phone) ...[
+            LengthLimitingTextInputFormatter(10),
+            FilteringTextInputFormatter.digitsOnly,
           ],
-          decoration: InputDecoration(
-            suffixIcon: isSomethingNew
-                ? IconButton(
-                    onPressed: () {
-                      widget.callback?.call(textEditingController.text);
-                    },
-                    icon: Container(
-                      padding: const EdgeInsets.all(2),
-                      decoration: const BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Colors.green,
-                      ),
-                      child: const Icon(
-                        Icons.done,
-                        color: Colors.white,
-                      ),
+        ],
+        decoration: InputDecoration(
+          suffixIcon: isSomethingNew
+              ? IconButton(
+                  onPressed: () {
+                    widget.callback?.call(textEditingController.text);
+                  },
+                  icon: Container(
+                    padding: const EdgeInsets.all(2),
+                    decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Colors.green,
                     ),
-                  )
-                : null,
-            label: Text.rich(
-              TextSpan(
-                text: widget.label,
-                children: [
-                  if (widget.isMandatory)
-                    const TextSpan(
-                      text: ' *',
-                      //   style: MyStyles.text.lato16_400P.negative,
+                    child: const Icon(
+                      Icons.done,
+                      color: Colors.white,
                     ),
-                ],
-              ),
-              //   style: MyStyles.text.lato16_400P.primary,
-            ),
-            hintText: 'Enter your ${widget.label.toLowerCase()}',
-            // hintStyle: MyStyles.text.lato12_400P.secondary,
-            focusedBorder: const UnderlineInputBorder(
-              borderSide: BorderSide(
-                // color: MyStyles.color.primary,
-                width: 2,
-              ),
+                  ),
+                )
+              : null,
+          label: Text.rich(
+            TextSpan(
+              text: widget.label,
+              children: [
+                if (widget.isMandatory)
+                  const TextSpan(
+                    text: ' *',
+                  ),
+              ],
             ),
           ),
-          //   style: MyStyles.text.lato16_600P.primary,
-          onSaved: widget.callback,
-          validator: widget.validator,
+          hintText: (widget.type == TextInputType.phone)
+              ? 'in seconds'
+              : 'Enter your ${widget.label.toLowerCase()}',
+          focusedBorder: const UnderlineInputBorder(
+            borderSide: BorderSide(
+              width: 2,
+            ),
+          ),
         ),
-      );
+        style: const TextStyle(
+          fontWeight: FontWeight.bold,
+        ),
+        onSaved: widget.callback,
+        validator: widget.validator,
+      ),
+    );
+  }
 }
