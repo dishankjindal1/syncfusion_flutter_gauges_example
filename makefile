@@ -1,4 +1,5 @@
 make reset:
+	dart format .
 	flutter clean
 	flutter pub get
 	make br

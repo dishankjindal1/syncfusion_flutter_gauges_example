@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pulgas_power/core/auth/auth_data.dart';
 import 'package:pulgas_power/core/mixin/app_storage_mixin.dart';
+import 'package:pulgas_power/di.dart';
 import 'package:pulgas_power/flow/view/app.dart';
 import 'package:pulgas_power/flow/view/pods/nav/nav_index_pod.dart';
-import 'package:pulgas_power/flow/view/view_models/setting/setting_viewmodel.dart';
 
 class AppDrawer extends ConsumerWidget with AppStorageMixin {
   const AppDrawer({super.key});
@@ -22,8 +22,7 @@ class AppDrawer extends ConsumerWidget with AppStorageMixin {
                 leading: const CircleAvatar(child: Icon(Icons.person)),
                 title: Text.rich(TextSpan(text: 'Welcome! ', children: [
                   TextSpan(
-                    text:
-                        '${ref.watch(settingViewModelProvider).username ?? 'User'} ',
+                    text: '${getIt<AuthData>().username ?? 'User'} ',
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
                     ),

@@ -50,11 +50,9 @@ class PPMain extends ConsumerWidget with AppStorageMixin {
   static pushReplacement(final BuildContext context) {
     Navigator.pushReplacement(
       context,
-      Platform.isIOS
-          ? CupertinoPageRoute(builder: (context) => const PPMain())
-          : PageRouteBuilder(
-              pageBuilder: (context, a, b) => const PPMain(),
-            ),
+      PageRouteBuilder(
+        pageBuilder: (context, a, b) => const PPMain(),
+      ),
     );
   }
 

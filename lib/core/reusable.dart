@@ -3,8 +3,13 @@ import 'dart:convert';
 import 'package:crypto/crypto.dart';
 
 class PProuterReuseable {
-  String generatePasswordHash(String userName, String userPassword) {
-    final combinedString = '$userName:$userPassword';
+  static String? generatePasswordHash(
+    final String? userName,
+    final String? password,
+  ) {
+    if (userName == null || password == null) return null;
+
+    final combinedString = '$userName:$password';
 
     // Convert the combined string to bytes and hash it using SHA-512
     final bytes = utf8.encode(combinedString);

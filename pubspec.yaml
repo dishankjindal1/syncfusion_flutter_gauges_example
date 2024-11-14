@@ -28,6 +28,7 @@ dependencies:
   super_tooltip: ^2.0.9
   crypto: ^3.0.6
   fluttertoast: ^8.2.8
+  dio: ^5.7.0
 
 dev_dependencies:
   flutter_test:

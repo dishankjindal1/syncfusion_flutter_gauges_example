@@ -8,36 +8,30 @@ import 'package:pulgas_power/flow/data/model/setting_model.dart';
 
 class SettingEntity extends Equatable with AppStorageMixin {
   static const key = 'SettingEntity';
-  final String? username;
-  final String? password;
-  final String? remoteIp;
-  final String? remotePort;
-  final Duration? liveDataInterval;
-  final Duration? dailyFigureInterval;
-  final Duration? graphFigureInterval;
-  final Duration? logsInterval;
+  final String remoteIp;
+  final String remotePort;
+  final Duration liveDataInterval;
+  final Duration dailyFigureInterval;
+  final Duration graphFigureInterval;
+  final Duration logsInterval;
 
   const SettingEntity({
-    this.username,
-    this.password,
-    this.remoteIp,
-    this.remotePort,
-    this.liveDataInterval,
-    this.dailyFigureInterval,
-    this.graphFigureInterval,
-    this.logsInterval,
+    this.remoteIp = 'http://gastotal.dyndns.org',
+    this.remotePort = '4833',
+    this.liveDataInterval = const Duration(seconds: 30),
+    this.dailyFigureInterval = const Duration(seconds: 30),
+    this.graphFigureInterval = const Duration(seconds: 30),
+    this.logsInterval = const Duration(seconds: 30),
   });
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
-      'username': username,
-      'password': password,
       'remoteIp': remoteIp,
       'remotePort': remotePort,
-      'liveDataInterval': liveDataInterval?.inMilliseconds,
-      'dailyFigureInterval': dailyFigureInterval?.inMilliseconds,
-      'graphFigureInterval': graphFigureInterval?.inMilliseconds,
-      'logsInterval': logsInterval?.inMilliseconds,
+      'liveDataInterval': liveDataInterval.inMilliseconds,
+      'dailyFigureInterval': dailyFigureInterval.inMilliseconds,
+      'graphFigureInterval': graphFigureInterval.inMilliseconds,
+      'logsInterval': logsInterval.inMilliseconds,
     };
   }
 
@@ -56,8 +50,6 @@ class SettingEntity extends Equatable with AppStorageMixin {
       await writeToMemory<String>(key, json.encode(toMap()));
 
   SettingEntity copyWith({
-    String? username,
-    String? password,
     String? remoteIp,
     String? remotePort,
     Duration? liveDataInterval,
@@ -66,8 +58,6 @@ class SettingEntity extends Equatable with AppStorageMixin {
     Duration? logsInterval,
   }) {
     return SettingEntity(
-      username: username ?? this.username,
-      password: password ?? this.password,
       remoteIp: remoteIp ?? this.remoteIp,
       remotePort: remotePort ?? this.remotePort,
       liveDataInterval: liveDataInterval ?? this.liveDataInterval,
@@ -79,8 +69,6 @@ class SettingEntity extends Equatable with AppStorageMixin {
 
   @override
   List<Object?> get props => [
-        username,
-        password,
         remoteIp,
         remotePort,
         liveDataInterval,

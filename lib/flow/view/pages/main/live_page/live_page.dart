@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pulgas_power/core/theme/theme.dart';
@@ -47,8 +48,7 @@ class _PPLivePageState extends ConsumerState<PPLivePage> {
 
   void infinteLoop() async {
     ref.invalidate(liveViewModelProvider);
-    await Future.delayed(ref.read(settingViewModelProvider).liveDataInterval ??
-        const Duration(seconds: 30));
+    await Future.delayed(ref.read(settingViewModelProvider).liveDataInterval);
 
     if (mounted) {
       infinteLoop();
@@ -197,8 +197,13 @@ class _PPLivePageState extends ConsumerState<PPLivePage> {
                   ],
                 );
               },
-              error: (_, __) => const Center(
-                child: Text('Try again later'),
+              error: (_, __) => Center(
+                child: CupertinoButton.filled(
+                  onPressed: () {
+                    ref.invalidate(liveViewModelProvider);
+                  },
+                  child: const Text('Try Again'),
+                ),
               ),
               loading: () => const Center(
                 child: CircularProgressIndicator.adaptive(),

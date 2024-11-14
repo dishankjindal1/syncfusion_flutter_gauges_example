@@ -53,7 +53,7 @@ class PPSettingPage extends ConsumerWidget with AppStorageMixin {
             children: [
               InputWidget(
                 label: 'Remote IP',
-                value: entity.remoteIp ?? 'localhost',
+                value: entity.remoteIp,
                 callback: (final String? value) {
                   ref
                       .read(settingViewModelProvider.notifier)
@@ -66,7 +66,7 @@ class PPSettingPage extends ConsumerWidget with AppStorageMixin {
               ),
               InputWidget(
                 label: 'Remote PORT',
-                value: entity.remotePort ?? '443',
+                value: entity.remotePort,
                 callback: (value) {
                   ref
                       .read(settingViewModelProvider.notifier)
@@ -80,7 +80,7 @@ class PPSettingPage extends ConsumerWidget with AppStorageMixin {
               InputWidget(
                 type: TextInputType.phone,
                 label: 'Live Data Interval (in Seconds)',
-                value: entity.liveDataInterval?.inSeconds.toString() ?? '30',
+                value: entity.liveDataInterval.inSeconds.toString(),
                 callback: (value) {
                   ref
                       .read(settingViewModelProvider.notifier)
@@ -94,7 +94,7 @@ class PPSettingPage extends ConsumerWidget with AppStorageMixin {
               InputWidget(
                 type: TextInputType.phone,
                 label: 'Daily Figures Interval (in Seconds)',
-                value: entity.dailyFigureInterval?.inSeconds.toString() ?? '30',
+                value: entity.dailyFigureInterval.inSeconds.toString(),
                 callback: (value) {
                   ref
                       .read(settingViewModelProvider.notifier)
@@ -109,7 +109,7 @@ class PPSettingPage extends ConsumerWidget with AppStorageMixin {
               InputWidget(
                 type: TextInputType.phone,
                 label: 'Graphs Interval (in Seconds)',
-                value: entity.graphFigureInterval?.inSeconds.toString() ?? '30',
+                value: entity.graphFigureInterval.inSeconds.toString(),
                 callback: (value) {
                   ref
                       .read(settingViewModelProvider.notifier)
@@ -124,7 +124,7 @@ class PPSettingPage extends ConsumerWidget with AppStorageMixin {
               InputWidget(
                 type: TextInputType.phone,
                 label: 'Logs Interval (in Seconds)',
-                value: entity.logsInterval?.inSeconds.toString() ?? '30',
+                value: entity.logsInterval.inSeconds.toString(),
                 callback: (value) {
                   ref
                       .read(settingViewModelProvider.notifier)

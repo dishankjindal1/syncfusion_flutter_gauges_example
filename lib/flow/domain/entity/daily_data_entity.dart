@@ -31,12 +31,14 @@ class PPDailyDataEntity extends Equatable {
   });
 
   String get solarProductionWithSymbol => '$solarProduction kWh';
-  String get renewableHoursWithSymbol => '$renewableHours h.';
+  String get renewableHoursWithSymbol =>
+      '${renewableHours.toStringAsFixed(2)} h.';
   String get batteryChargeWithSymbol => '$batteryCharge kWh';
   String get batteryDischargeWithSymbol => '$batteryDischarge kWh';
   String get sunHoursWithSymbol => '$sunHours h.';
   String get generatorEnergyWithSymbol => '$generatorEnergy kWh';
-  String get generatorHoursWithSymbol => '$generatorHours h.';
+  String get generatorHoursWithSymbol =>
+      '${generatorHours.toStringAsFixed(2)} h.';
   String get generatorFuelWithSymbol => '$generatorFuel l.';
   String get consumptionWithSymbol => '$consumption kWh';
   String get co2SavedWithSymbol => '$co2Saved TON';

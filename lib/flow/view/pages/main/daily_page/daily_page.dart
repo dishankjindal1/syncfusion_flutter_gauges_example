@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
@@ -38,8 +39,7 @@ class _PPDailyPageState extends ConsumerState<PPDailyPage> {
     ref.invalidate(dailyViewModelProvider);
 
     await Future.delayed(
-        ref.read(settingViewModelProvider).dailyFigureInterval ??
-            const Duration(seconds: 30));
+        ref.read(settingViewModelProvider).dailyFigureInterval);
 
     if (mounted) {
       infinteLoop();
@@ -253,8 +253,13 @@ class _PPDailyPageState extends ConsumerState<PPDailyPage> {
                   ),
                 ],
               ),
-              error: (_, __) => const Center(
-                child: Text('Try again later'),
+              error: (_, __) => Center(
+                child: CupertinoButton.filled(
+                  onPressed: () {
+                    ref.invalidate(dailyViewModelProvider);
+                  },
+                  child: const Text('Try Again'),
+                ),
               ),
               loading: () => const Center(
                 child: CircularProgressIndicator.adaptive(),

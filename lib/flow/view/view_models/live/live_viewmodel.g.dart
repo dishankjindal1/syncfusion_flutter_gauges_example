@@ -6,7 +6,7 @@ part of 'live_viewmodel.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$liveViewModelHash() => r'fce0f5a2b9f74c989b85b236ab11099d08d821fc';
+String _$liveViewModelHash() => r'98faa80f251cdf8d80c8ab259bf55dbbb41fed78';
 
 /// See also [liveViewModel].
 @ProviderFor(liveViewModel)

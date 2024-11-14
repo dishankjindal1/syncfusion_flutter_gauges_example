@@ -1,53 +1,36 @@
-import 'dart:math';
+import 'dart:convert';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pulgas_power/core/auth/auth_data.dart';
+import 'package:pulgas_power/core/network/network.dart';
+import 'package:pulgas_power/di.dart';
 import 'package:pulgas_power/flow/data/model/live_data_model.dart';
 import 'package:pulgas_power/flow/domain/entity/live_data_entity.dart';
-import 'package:pulgas_power/flow/domain/enum/live_enums.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'live_viewmodel.g.dart';
 
 @Riverpod(keepAlive: true)
 Future<PPLiveDataEntity> liveViewModel(Ref ref) async {
-  final result = {
-    'avv': LiveDataType.AVAILABLE.startRange +
-        Random()
-            .nextInt((LiveDataType.AVAILABLE.endRange -
-                    LiveDataType.AVAILABLE.startRange)
-                .toInt())
-            .toDouble(),
-    'soo': LiveDataType.SOLAR_OUTPUT.startRange +
-        Random().nextInt((LiveDataType.SOLAR_OUTPUT.endRange -
-                LiveDataType.SOLAR_OUTPUT.startRange)
-            .toInt()),
-    'pcs': LiveDataType.PCS.startRange +
-        Random().nextInt(
-            (LiveDataType.PCS.endRange - LiveDataType.PCS.startRange).toInt()),
-    'gnr': LiveDataType.GENERATOR.startRange +
-        Random().nextInt((LiveDataType.GENERATOR.endRange -
-                LiveDataType.GENERATOR.startRange)
-            .toInt()),
-    'bvo': LiveDataType.BATTERY_VOLTAGE.startRange +
-        Random().nextInt((LiveDataType.BATTERY_VOLTAGE.endRange -
-                LiveDataType.BATTERY_VOLTAGE.startRange)
-            .toInt()),
-    'boc': LiveDataType.BATTERY_CURRENT.startRange +
-        Random().nextInt((LiveDataType.BATTERY_CURRENT.endRange -
-                LiveDataType.BATTERY_CURRENT.startRange)
-            .toInt()),
-    'bch': LiveDataType.BATTERY_CHARGE.startRange +
-        Random().nextInt((LiveDataType.BATTERY_CHARGE.endRange -
-                LiveDataType.BATTERY_CHARGE.startRange)
-            .toInt()),
-    'ben': LiveDataType.BATTERY_ENERGY.startRange +
-        Random().nextInt((LiveDataType.BATTERY_ENERGY.endRange -
-                LiveDataType.BATTERY_ENERGY.startRange)
-            .toInt()),
-    'lup': DateTime.now().millisecondsSinceEpoch,
-  };
+  final network = ref.read(networkHandlerProvider);
 
-  await Future.delayed(const Duration(seconds: 2));
+  final res = await network.get('?a=ALIVE', queryParameters: {
+    'k': '${getIt<AuthData>().aKey}',
+  });
+
+  final decodedRes = json.decode(res.data) as Map<String, dynamic>;
+
+  final result = <String, dynamic>{
+    'available': num.parse(decodedRes['aav']).toDouble(),
+    'solarOuput': num.parse(decodedRes['soo']).toDouble(),
+    'pcs': num.parse(decodedRes['pcs']).toDouble(),
+    'generator': num.parse(decodedRes['gnr']).toDouble(),
+    'batteryVoltage': num.parse(decodedRes['bvo']).toDouble(),
+    'batteryCurrent': num.parse(decodedRes['boc']).toDouble(),
+    'batteryCharge': num.parse(decodedRes['bch']).toDouble(),
+    'batterEnergy': num.parse(decodedRes['ben']).toDouble(),
+    'reportedAt': DateTime.now().millisecondsSinceEpoch,
+  };
 
   return PPLiveDataModel.fromMap(result);
 }
