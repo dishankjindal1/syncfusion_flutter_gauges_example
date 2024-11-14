@@ -5,6 +5,7 @@ Update:-
 2. Auth logic improved and login page improved, will test once login api is available.
 3. working on refresh token api logic, will test once the real api is available.
 4. minor refactoring work.
+5. Now the endpoint and intervals are configurable via settings page.
 
 Clarification:-
 - none
