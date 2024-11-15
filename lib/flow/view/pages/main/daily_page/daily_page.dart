@@ -7,7 +7,6 @@ import 'package:pulgas_power/flow/view/pages/main/app_drawer.dart';
 import 'package:pulgas_power/flow/view/pages/main/daily_page/info_linear.dart';
 import 'package:pulgas_power/flow/view/view_models/daily/daily_viewmodel.dart';
 import 'package:pulgas_power/flow/view/view_models/setting/setting_viewmodel.dart';
-import 'package:super_tooltip/super_tooltip.dart';
 
 class PPDailyPage extends ConsumerStatefulWidget {
   const PPDailyPage({super.key});
@@ -19,8 +18,8 @@ class PPDailyPage extends ConsumerStatefulWidget {
 class _PPDailyPageState extends ConsumerState<PPDailyPage> {
   final scrollController = ScrollController();
   final infoLinearData = [
-    (8.5, 'Stop Gen\n08:30', SuperTooltipController()),
-    (20.0, 'Now\n20:00', SuperTooltipController()),
+    (8.5, 'Stop Gen\n08:30'),
+    (20.0, 'Now\n20:00'),
   ];
   bool isEdge = false;
 
@@ -64,7 +63,6 @@ class _PPDailyPageState extends ConsumerState<PPDailyPage> {
 
   @override
   void dispose() {
-    infoLinearData.map((e) => e.$3.dispose());
     scrollController.removeListener(detectEdge);
     scrollController.dispose();
     super.dispose();
@@ -101,17 +99,6 @@ class _PPDailyPageState extends ConsumerState<PPDailyPage> {
           }),
         ],
       ),
-      onEndDrawerChanged: (isOpened) {
-        if (mounted) {
-          setState(() {
-            if (isOpened) {
-              infoLinearData.map((e) => e.$3.hideTooltip());
-            } else {
-              infoLinearData.map((e) => e.$3.showTooltip());
-            }
-          });
-        }
-      },
       endDrawer: const AppDrawer(),
       body: Scrollbar(
         controller: scrollController,
@@ -123,10 +110,10 @@ class _PPDailyPageState extends ConsumerState<PPDailyPage> {
                       onRefresh: () async {
                         ref.invalidate(dailyViewModelProvider);
                       },
-                      child: Padding(
+                      child: Container(
                         padding: const EdgeInsets.symmetric(
                           horizontal: 24,
-                          vertical: 16.0,
+                          vertical: 16,
                         ).copyWith(top: 8),
                         child: ScrollConfiguration(
                           behavior: ScrollConfiguration.of(context)
@@ -135,82 +122,76 @@ class _PPDailyPageState extends ConsumerState<PPDailyPage> {
                             controller: scrollController,
                             physics: const AlwaysScrollableScrollPhysics(),
                             clipBehavior: Clip.none,
-                            child: Center(
-                              child: Container(
-                                constraints: const BoxConstraints(
-                                  maxWidth: 500,
-                                ),
-                                child: Column(
-                                  children: [
-                                    const Divider(),
-                                    Table(
-                                      columnWidths: const {
-                                        0: FlexColumnWidth(3),
-                                        1: FlexColumnWidth(2),
-                                      },
-                                      children: [
-                                        for (final row in data.listOfData) ...[
-                                          TableRow(children: [
-                                            TableCell(
+                            child: Container(
+                              constraints: const BoxConstraints(
+                                maxWidth: 500,
+                              ),
+                              child: Column(
+                                children: [
+                                  const Divider(),
+                                  Table(
+                                    columnWidths: const {
+                                      0: FlexColumnWidth(3),
+                                      1: FlexColumnWidth(2),
+                                    },
+                                    children: [
+                                      for (final row in data.listOfData) ...[
+                                        TableRow(children: [
+                                          TableCell(
+                                            child: Text(
+                                              row.$1,
+                                              style: const TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                          ),
+                                          TableCell(
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                color: const Color.fromRGBO(
+                                                    228, 228, 228, 1),
+                                                borderRadius:
+                                                    BorderRadius.circular(100),
+                                              ),
                                               child: Text(
-                                                row.$1,
-                                                style: const TextStyle(
-                                                    fontWeight:
-                                                        FontWeight.bold),
+                                                row.$2,
+                                                textAlign: TextAlign.center,
                                               ),
                                             ),
+                                          ),
+                                        ]),
+                                        if (data.listOfData.last != row)
+                                          const TableRow(children: [
                                             TableCell(
-                                              child: Container(
-                                                decoration: BoxDecoration(
-                                                  color: const Color.fromRGBO(
-                                                      228, 228, 228, 1),
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          100),
-                                                ),
-                                                child: Text(
-                                                  row.$2,
-                                                  textAlign: TextAlign.center,
-                                                ),
+                                              child: Gap(8),
+                                            ),
+                                            TableCell(
+                                              child: Gap(
+                                                8,
                                               ),
                                             ),
                                           ]),
-                                          if (data.listOfData.last != row)
-                                            const TableRow(children: [
-                                              TableCell(
-                                                child: SizedBox.square(
-                                                  dimension: 8,
-                                                ),
-                                              ),
-                                              TableCell(
-                                                child: SizedBox.square(
-                                                  dimension: 8,
-                                                ),
-                                              ),
-                                            ]),
-                                        ],
                                       ],
-                                    ),
-                                    const Divider(),
-                                    const Padding(
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: 16.0),
-                                      child: Text(
-                                        'Solar/Generator Run',
-                                        style: TextStyle(
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.bold,
-                                        ),
+                                    ],
+                                  ),
+                                  const Divider(),
+                                  const Padding(
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 16.0),
+                                    child: Text(
+                                      'Solar/Generator Run',
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
                                       ),
                                     ),
-                                    const Gap(60),
-                                    InfoLinear(data: infoLinearData),
-                                    const Gap(8),
-                                    Image.network(
-                                        'https://picsum.photos/1920/1080'),
-                                    const Gap(24),
-                                  ],
-                                ),
+                                  ),
+                                  InfoLinear(data: infoLinearData),
+                                  const Gap(8),
+                                  Image.network(
+                                    'https://picsum.photos/1920/1080',
+                                  ),
+                                  const Gap(24),
+                                ],
                               ),
                             ),
                           ),

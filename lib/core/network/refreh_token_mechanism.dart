@@ -4,8 +4,8 @@ import 'package:pulgas_power/core/auth/auth_data.dart';
 import 'package:pulgas_power/core/mixin/app_storage_mixin.dart';
 
 @immutable
-class RefreshTokenMechanism extends Interceptor with AppStorageMixin {
-  const RefreshTokenMechanism(this._dio);
+class RefreshTokenMechanism extends QueuedInterceptor with AppStorageMixin {
+  RefreshTokenMechanism(this._dio);
 
   final Dio _dio;
 

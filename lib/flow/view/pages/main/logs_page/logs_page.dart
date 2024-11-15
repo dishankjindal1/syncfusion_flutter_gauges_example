@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
 import 'package:pulgas_power/core/mixin/app_storage_mixin.dart';
@@ -90,91 +89,64 @@ class PPLogsPage extends ConsumerWidget with AppStorageMixin {
                     onRefresh: () async {
                       ref.invalidate(const LogsViewModelFamily());
                     },
-                    child: AnimationLimiter(
-                      child: ListView.builder(
-                        addAutomaticKeepAlives: false,
-                        itemBuilder: (context, index) {
-                          const pageLimit = 20;
-                          final pageNumber = index ~/ pageLimit;
-                          final indexInPage = index % pageLimit;
+                    child: ListView.builder(
+                      addAutomaticKeepAlives: false,
+                      itemBuilder: (context, index) {
+                        const pageLimit = 20;
+                        final pageNumber = index ~/ pageLimit;
+                        final indexInPage = index % pageLimit;
 
-                          final response = ref.watch(LogsViewModelProvider(
-                            pageNumber,
-                            pageLimit,
-                          ));
+                        final response = ref.watch(LogsViewModelProvider(
+                          pageNumber,
+                          pageLimit,
+                        ));
 
-                          return response.isRefreshing
-                              ? indexInPage == 0
-                                  ? const Center(
-                                      child: SizedBox(
-                                          height: 48,
-                                          child: CircularProgressIndicator
-                                              .adaptive()),
-                                    )
-                                  : null
-                              : response.when(
-                                  data: (data) {
-                                    final (date, type, entry) =
-                                        data.data![indexInPage];
-                                    return AnimationConfiguration.staggeredList(
-                                      position: index,
-                                      child: SlideAnimation(
-                                        verticalOffset: 400.0,
-                                        duration:
-                                            const Duration(milliseconds: 600),
-                                        child: ScaleAnimation(
-                                          child: Container(
-                                            padding: const EdgeInsets.all(20),
-                                            decoration: BoxDecoration(
-                                              color: index.isOdd
-                                                  ? const Color(
-                                                          PPTheme.greyColor)
-                                                      .withOpacity(0.5)
-                                                  : Colors.white,
-                                            ),
-                                            child: Row(
-                                              children: [
-                                                Expanded(
-                                                    flex: 2,
-                                                    child: Text(
-                                                      DateFormat(
-                                                              'dd-MM-yyyy hh:mm')
-                                                          .format(
-                                                              DateTime.parse(
-                                                                  date)),
-                                                    )),
-                                                const Gap(8),
-                                                Expanded(
-                                                    child: Text(
-                                                  type,
-                                                )),
-                                                const Gap(8),
-                                                Expanded(
-                                                    flex: 3,
-                                                    child: Text(
-                                                      entry,
-                                                    )),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                  error: (_, __) => indexInPage == 0
-                                      ? const Center(child: Text('Try Again'))
-                                      : const SizedBox.shrink(),
-                                  loading: () => indexInPage == 0
-                                      ? const Center(
-                                          child: SizedBox(
-                                              height: 48,
-                                              child: CircularProgressIndicator
-                                                  .adaptive()),
-                                        )
-                                      : null,
-                                );
-                        },
-                      ),
+                        return response.when(
+                          data: (data) {
+                            final (date, type, entry) = data.data![indexInPage];
+                            return Container(
+                              padding: const EdgeInsets.all(20),
+                              decoration: BoxDecoration(
+                                color: index.isOdd
+                                    ? const Color(PPTheme.greyColor)
+                                        .withOpacity(0.5)
+                                    : Colors.white,
+                              ),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                      flex: 2,
+                                      child: Text(
+                                        DateFormat('dd-MM-yyyy hh:mm')
+                                            .format(DateTime.parse(date)),
+                                      )),
+                                  const Gap(8),
+                                  Expanded(
+                                      child: Text(
+                                    type,
+                                  )),
+                                  const Gap(8),
+                                  Expanded(
+                                      flex: 3,
+                                      child: Text(
+                                        entry,
+                                      )),
+                                ],
+                              ),
+                            );
+                          },
+                          error: (_, __) => indexInPage == 0
+                              ? const Center(child: Text('Try Again'))
+                              : const SizedBox.shrink(),
+                          loading: () => indexInPage == 0
+                              ? const SizedBox(
+                                  height: 48,
+                                  child: Center(
+                                    child: CircularProgressIndicator.adaptive(),
+                                  ))
+                              : null,
+                        );
+                      },
                     ),
                   ),
                 ),

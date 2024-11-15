@@ -1,17 +1,15 @@
 Hi Lei,
 
 Update:-
-1. Intergrated 2 apis, ALIVE and ADAILY.
-2. Auth logic improved and login page improved, will test once login api is available.
-3. working on refresh token api logic, will test once the real api is available.
-4. minor refactoring work.
-5. Now the endpoint and intervals are configurable via settings page.
+1. Bug fix on the daily page, where the annotation marker is coming on top of drawer.
+2. App drawer fixed for landscape orientation. In landscape, the app drawer was overflowing, and size proportions were incorrect.
+3. Network call improvement by making each api call in queue, instead of parallel calls to avoid scenario where mulitple same access token refresh api calls can be triggered.
 
 Clarification:-
 - none
 
 Planning:-
-1. Bug fix on the daily page, where the annotation marker is coming on top of drawer.
+- none
 
 Need:-
 1. Api modifications needed as per told guidelines for frontend consumption.
