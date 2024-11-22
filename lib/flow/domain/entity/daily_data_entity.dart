@@ -1,5 +1,4 @@
 import 'package:equatable/equatable.dart';
-import 'package:intl/intl.dart';
 
 class PPDailyDataEntity extends Equatable {
   final double solarProduction;
@@ -13,7 +12,7 @@ class PPDailyDataEntity extends Equatable {
   final double consumption;
   final double co2Saved;
   final double co2Produced;
-  final DateTime reportedAt;
+  final String reportedAt;
 
   const PPDailyDataEntity({
     required this.solarProduction,
@@ -43,8 +42,7 @@ class PPDailyDataEntity extends Equatable {
   String get consumptionWithSymbol => '$consumption kWh';
   String get co2SavedWithSymbol => '$co2Saved TON';
   String get co2ProducedWithSymbol => '${co2Produced.toStringAsFixed(3)} TON';
-  String get displayReportedAt =>
-      DateFormat('dd-MM-yyyy hh:mm:ss').format(reportedAt);
+  String get displayReportedAt => reportedAt;
 
   List<(String, String)> get listOfData => [
         ('Solar Production', solarProductionWithSymbol),
@@ -60,22 +58,20 @@ class PPDailyDataEntity extends Equatable {
         ('CO2 Produced', co2ProducedWithSymbol),
       ];
 
-  Map<String, dynamic> toMap() {
-    return <String, dynamic>{
-      'solarProduction': solarProduction,
-      'renewableHours': renewableHours,
-      'batteryCharge': batteryCharge,
-      'batteryDischarge': batteryDischarge,
-      'sunHours': sunHours,
-      'generatorEnergy': generatorEnergy,
-      'generatorHours': generatorHours,
-      'generatorFuel': generatorFuel,
-      'consumption': consumption,
-      'co2Saved': co2Saved,
-      'co2Produced': co2Produced,
-      'reportedAt': reportedAt.millisecondsSinceEpoch,
-    };
-  }
+  Map<String, dynamic> toMap() => <String, dynamic>{
+        'spr': solarProduction,
+        'rhr': renewableHours,
+        'bch': batteryCharge,
+        'bdc': batteryDischarge,
+        'shr': sunHours,
+        'gen': generatorEnergy,
+        'ghr': generatorHours,
+        'gfl': generatorFuel,
+        'con': consumption,
+        'cos': co2Saved,
+        'cop': co2Produced,
+        'lup': reportedAt,
+      };
 
   @override
   List<Object?> get props => [
@@ -92,38 +88,4 @@ class PPDailyDataEntity extends Equatable {
         co2Produced,
         reportedAt,
       ];
-}
-
-class PPDailyDataModel extends PPDailyDataEntity {
-  const PPDailyDataModel({
-    required super.solarProduction,
-    required super.renewableHours,
-    required super.batteryCharge,
-    required super.batteryDischarge,
-    required super.sunHours,
-    required super.generatorEnergy,
-    required super.generatorHours,
-    required super.generatorFuel,
-    required super.consumption,
-    required super.co2Saved,
-    required super.co2Produced,
-    required super.reportedAt,
-  });
-
-  factory PPDailyDataModel.fromMap(Map<String, dynamic> map) =>
-      PPDailyDataModel(
-        solarProduction: map['solarProduction'] as double,
-        renewableHours: map['renewableHours'] as double,
-        batteryCharge: map['batteryCharge'] as double,
-        batteryDischarge: map['batteryDischarge'] as double,
-        sunHours: map['sunHours'] as double,
-        generatorEnergy: map['generatorEnergy'] as double,
-        generatorHours: map['generatorHours'] as double,
-        generatorFuel: map['generatorFuel'] as double,
-        consumption: map['consumption'] as double,
-        co2Saved: map['co2Saved'] as double,
-        co2Produced: map['co2Produced'] as double,
-        reportedAt:
-            DateTime.fromMillisecondsSinceEpoch(map['reportedAt'] as int),
-      );
 }

@@ -20,17 +20,5 @@ Future<PPLiveDataEntity> liveViewModel(Ref ref) async {
 
   final decodedRes = json.decode(res.data) as Map<String, dynamic>;
 
-  final result = <String, dynamic>{
-    'available': num.parse(decodedRes['aav']).toDouble(),
-    'solarOuput': num.parse(decodedRes['soo']).toDouble(),
-    'pcs': num.parse(decodedRes['pcs']).toDouble(),
-    'generator': num.parse(decodedRes['gnr']).toDouble(),
-    'batteryVoltage': num.parse(decodedRes['bvo']).toDouble(),
-    'batteryCurrent': num.parse(decodedRes['boc']).toDouble(),
-    'batteryCharge': num.parse(decodedRes['bch']).toDouble(),
-    'batterEnergy': num.parse(decodedRes['ben']).toDouble(),
-    'reportedAt': DateTime.now().millisecondsSinceEpoch,
-  };
-
-  return PPLiveDataModel.fromMap(result);
+  return PPLiveDataModel.fromMap(decodedRes);
 }

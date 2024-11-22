@@ -1,5 +1,4 @@
 import 'package:equatable/equatable.dart';
-import 'package:intl/intl.dart';
 import 'package:pulgas_power/flow/domain/enum/live_enums.dart';
 
 class PPLiveDataEntity extends Equatable {
@@ -23,7 +22,7 @@ class PPLiveDataEntity extends Equatable {
   final double batteryCurrent;
   final double batteryCharge;
   final double batterEnergy;
-  final DateTime reportedAt;
+  final String reportedAt;
 
   String get availableWithSymbol =>
       '$available ${LiveDataType.AVAILABLE.unitType.symbol}';
@@ -40,8 +39,7 @@ class PPLiveDataEntity extends Equatable {
       '$batteryCharge ${LiveDataType.BATTERY_CHARGE.unitType.symbol}';
   String get batterEnergyWithSymbol =>
       '$batterEnergy ${LiveDataType.BATTERY_ENERGY.unitType.symbol}';
-  String get displayReportedAt =>
-      DateFormat('dd-MM-yyyy hh:mm:ss').format(reportedAt);
+  String get displayReportedAt => reportedAt;
 
   List<(LiveDataType, double, String)> get listOfData => [
         (LiveDataType.AVAILABLE, available, availableWithSymbol),
@@ -71,7 +69,7 @@ class PPLiveDataEntity extends Equatable {
         'batteryCurrent': batteryCurrent,
         'batteryCharge': batteryCharge,
         'batterEnergy': batterEnergy,
-        'reportedAt': reportedAt.toIso8601String(),
+        'reportedAt': reportedAt,
       };
 
   @override

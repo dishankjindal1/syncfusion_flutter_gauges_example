@@ -103,7 +103,7 @@ class PPLogsPage extends ConsumerWidget with AppStorageMixin {
 
                         return response.when(
                           data: (data) {
-                            final (date, type, entry) = data.data![indexInPage];
+                            final (date, type, entry) = data.data[indexInPage];
                             return Container(
                               padding: const EdgeInsets.all(20),
                               decoration: BoxDecoration(
