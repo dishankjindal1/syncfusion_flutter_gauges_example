@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pulgas_power/core/theme/theme.dart';
 import 'package:pulgas_power/flow/view/pages/main/app_drawer.dart';
-import 'package:pulgas_power/flow/view/pages/main/live_page/info_guage.dart';
+import 'package:pulgas_power/flow/view/pages/main/live_page/info_gauge.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:pulgas_power/flow/view/view_models/live/live_viewmodel.dart';
 import 'package:pulgas_power/flow/view/view_models/setting/setting_viewmodel.dart';
@@ -24,7 +24,7 @@ class _PPLivePageState extends ConsumerState<PPLivePage> {
 
     WidgetsBinding.instance.addPostFrameCallback(
       (_) {
-        infinteLoop();
+        infiniteLoop();
         scrollController.addListener(detectEdge);
       },
     );
@@ -46,12 +46,12 @@ class _PPLivePageState extends ConsumerState<PPLivePage> {
     }
   }
 
-  void infinteLoop() async {
+  void infiniteLoop() async {
     ref.invalidate(liveViewModelProvider);
     await Future.delayed(ref.read(settingViewModelProvider).liveDataInterval);
 
     if (mounted) {
-      infinteLoop();
+      infiniteLoop();
     }
   }
 
@@ -142,7 +142,7 @@ class _PPLivePageState extends ConsumerState<PPLivePage> {
                                         verticalOffset: 400.0,
                                         child: ScaleAnimation(
                                           child: FadeInAnimation(
-                                            child: PPInfoGuage(
+                                            child: PPInfoGauge(
                                               type: type,
                                               value: value,
                                               valueWithSymbol: valueWithSymbol,

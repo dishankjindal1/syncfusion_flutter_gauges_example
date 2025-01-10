@@ -5,8 +5,8 @@ import 'package:intl/intl.dart';
 import 'package:pulgas_power/flow/domain/enum/live_enums.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
 
-class PPInfoGuage extends StatelessWidget {
-  const PPInfoGuage({
+class PPInfoGauge extends StatelessWidget {
+  const PPInfoGauge({
     required this.type,
     required this.value,
     required this.valueWithSymbol,
@@ -105,7 +105,7 @@ class PPInfoGuage extends StatelessWidget {
                         color: Colors.green,
                       ),
 
-                    /// Add the black pointer on the guage strip
+                    /// Add the black pointer on the gauge strip
                     if (type.stickyPointerPosition != null)
                       GaugeRange(
                         startValue: type.stickyPointerPosition!.toDouble() -
