@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:super_tooltip/super_tooltip.dart';
+import 'package:pulgas_power/core/theme/theme.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
 
 class InfoLinear extends StatelessWidget {
   const InfoLinear({
+    required this.data,
     super.key,
   });
+
+  final List<(double, String)> data;
 
   @override
   Widget build(BuildContext context) {
@@ -50,44 +53,42 @@ class InfoLinear extends StatelessWidget {
           endValue: 24,
           startWidth: trackThickness,
           endWidth: trackThickness,
-          color: Color(0xFFD1D7DF),
+          color: Color(PPTheme.greyColor),
         ),
       ],
       markerPointers: [
-        for (final (double value, String msg, SuperTooltipController ctrl) in [
-          (8.5, 'Stop Gen\n08:30', SuperTooltipController()),
-          (20, 'Now\n20:00', SuperTooltipController()),
-        ])
+        for (final (double value, String msg) in data)
           LinearWidgetPointer(
             value: value,
             position: LinearElementPosition.outside,
             offset: 30,
-            child: SuperTooltip(
-              controller: ctrl,
-              verticalOffset: -4,
-              hasShadow: false,
-              showBarrier: false,
-              popupDirection: TooltipDirection.up,
-              minimumOutsideMargin: 0,
-              borderRadius: 4,
-              arrowLength: 10,
-              arrowBaseWidth: 10,
-              bubbleDimensions:
-                  const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-              content: Text(
-                msg,
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                  fontSize: 12,
-                  color: Colors.white,
+            child: Stack(
+              alignment: Alignment.bottomCenter,
+              children: [
+                const Icon(
+                  Icons.location_on,
+                  color: Colors.black,
+                  size: 36,
                 ),
-              ),
-              backgroundColor: Colors.black,
-              child: const SizedBox.shrink(),
+                Container(
+                  margin: const EdgeInsets.only(bottom: 12),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: Colors.black,
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                  child: Text(
+                    msg,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      fontSize: 12,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ],
             ),
-            onAnimationCompleted: () {
-              ctrl.showTooltip();
-            },
           ),
       ],
     );
