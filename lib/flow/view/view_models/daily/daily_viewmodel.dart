@@ -1,10 +1,4 @@
-import 'dart:convert';
-
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pulgas_power/core/auth/auth_data.dart';
-import 'package:pulgas_power/core/network/network.dart';
-import 'package:pulgas_power/di.dart';
-import 'package:pulgas_power/flow/data/model/daily_data_model.dart';
 import 'package:pulgas_power/flow/domain/entity/daily_data_entity.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -12,13 +6,20 @@ part 'daily_viewmodel.g.dart';
 
 @Riverpod(keepAlive: true)
 Future<PPDailyDataEntity> dailyViewModel(Ref ref) async {
-  final network = ref.read(networkHandlerProvider);
+  await Future.delayed(const Duration(seconds: 2));
 
-  final res = await network.get('?a=ADAILY', queryParameters: {
-    'k': '${getIt<AuthData>().aKey}',
-  });
-
-  final decodedRes = json.decode(res.data) as Map<String, dynamic>;
-
-  return PPDailyDataModel.fromMap(decodedRes);
+  return PPDailyDataEntity(
+    solarProduction: 2424,
+    renewableHours: 6.1,
+    batteryCharge: -1533,
+    batteryDischarge: 36,
+    sunHours: 4.7,
+    generatorEnergy: 1091,
+    generatorHours: 8.5,
+    generatorFuel: 326,
+    consumption: 2104,
+    co2Saved: 2.545,
+    co2Produced: 0.860,
+    reportedAt: DateTime.now().toIso8601String(),
+  );
 }
