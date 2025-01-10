@@ -12,6 +12,7 @@ class PPLogsPage extends ConsumerWidget with AppStorageMixin {
 
   @override
   Widget build(final BuildContext context, final WidgetRef ref) {
+    final linkLayer = LayerLink();
     return Scaffold(
       backgroundColor: const Color(PPTheme.appBgColor),
       appBar: AppBar(
@@ -84,69 +85,97 @@ class PPLogsPage extends ConsumerWidget with AppStorageMixin {
                 ),
               ),
               Expanded(
-                child: SafeArea(
-                  child: RefreshIndicator.adaptive(
-                    onRefresh: () async {
-                      ref.invalidate(const LogsViewModelFamily());
-                    },
-                    child: ListView.builder(
-                      addAutomaticKeepAlives: false,
-                      itemBuilder: (context, index) {
-                        const pageLimit = 20;
-                        final pageNumber = index ~/ pageLimit;
-                        final indexInPage = index % pageLimit;
-
-                        final response = ref.watch(LogsViewModelProvider(
-                          pageNumber,
-                          pageLimit,
-                        ));
-
-                        return response.when(
-                          data: (data) {
-                            final (date, type, entry) = data.data[indexInPage];
-                            return Container(
-                              padding: const EdgeInsets.all(20),
-                              decoration: BoxDecoration(
-                                color: index.isOdd
-                                    ? const Color(PPTheme.greyColor)
-                                        .withOpacity(0.5)
-                                    : Colors.white,
-                              ),
-                              child: Row(
-                                children: [
-                                  Expanded(
-                                      flex: 2,
-                                      child: Text(
-                                        DateFormat('dd-MM-yyyy hh:mm')
-                                            .format(DateTime.parse(date)),
-                                      )),
-                                  const Gap(8),
-                                  Expanded(
-                                      child: Text(
-                                    type,
-                                  )),
-                                  const Gap(8),
-                                  Expanded(
-                                      flex: 3,
-                                      child: Text(
-                                        entry,
-                                      )),
-                                ],
-                              ),
-                            );
-                          },
-                          error: (_, __) => indexInPage == 0
-                              ? const Center(child: Text('Try Again'))
-                              : const SizedBox.shrink(),
-                          loading: () => indexInPage == 0
-                              ? const SizedBox(
-                                  height: 48,
-                                  child: Center(
-                                    child: CircularProgressIndicator.adaptive(),
-                                  ))
-                              : null,
-                        );
+                child: Container(
+                  clipBehavior: Clip.hardEdge,
+                  decoration: BoxDecoration(),
+                  child: SafeArea(
+                    child: RefreshIndicator.adaptive(
+                      onRefresh: () async {
+                        ref.invalidate(const LogsViewModelFamily());
                       },
+                      child: Stack(
+                        children: [
+                          ListView.builder(
+                            addAutomaticKeepAlives: false,
+                            itemBuilder: (context, index) {
+                              const pageLimit = 20;
+                              final pageNumber = index ~/ pageLimit;
+                              final indexInPage = index % pageLimit;
+
+                              final response = ref.watch(LogsViewModelProvider(
+                                pageNumber,
+                                pageLimit,
+                              ));
+
+                              return response.when(
+                                data: (data) {
+                                  final (date, type, entry) =
+                                      data.data[indexInPage];
+
+                                  final child = Container(
+                                    padding: const EdgeInsets.all(20),
+                                    decoration: BoxDecoration(
+                                      color: index.isOdd
+                                          ? const Color(PPTheme.greyColor)
+                                              .withAlpha(255 ~/ 2)
+                                          : Colors.white,
+                                    ),
+                                    child: Row(
+                                      children: [
+                                        Expanded(
+                                            flex: 2,
+                                            child: Text(
+                                              DateFormat('dd-MM-yyyy hh:mm')
+                                                  .format(DateTime.parse(date)),
+                                            )),
+                                        const Gap(8),
+                                        Expanded(
+                                            child: Text(
+                                          type,
+                                        )),
+                                        const Gap(8),
+                                        Expanded(
+                                            flex: 3,
+                                            child: Text(
+                                              entry,
+                                            )),
+                                      ],
+                                    ),
+                                  );
+                                  if (index == 20) {
+                                    return CompositedTransformTarget(
+                                      link: linkLayer,
+                                      child: child,
+                                    );
+                                  }
+
+                                  return child;
+                                },
+                                error: (_, __) => indexInPage == 0
+                                    ? const Center(child: Text('Try Again'))
+                                    : const SizedBox.shrink(),
+                                loading: () => indexInPage == 0
+                                    ? const SizedBox(
+                                        height: 48,
+                                        child: Center(
+                                          child: CircularProgressIndicator
+                                              .adaptive(),
+                                        ))
+                                    : null,
+                              );
+                            },
+                          ),
+                          CompositedTransformFollower(
+                            link: linkLayer,
+                            showWhenUnlinked: false,
+                            child: Container(
+                              height: 60,
+                              width: 200,
+                              color: Colors.amber,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
