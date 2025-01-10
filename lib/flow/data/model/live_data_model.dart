@@ -13,17 +13,16 @@ class PPLiveDataModel extends PPLiveDataEntity {
     required super.reportedAt,
   });
 
-  factory PPLiveDataModel.fromMap(Map<String, dynamic> map) {
-    return PPLiveDataModel(
-      available: map['avv'] as double,
-      solarOuput: map['soo'] as double,
-      pcs: map['pcs'] as double,
-      generator: map['gnr'] as double,
-      batteryVoltage: map['bvo'] as double,
-      batteryCurrent: map['boc'] as double,
-      batteryCharge: map['bch'] as double,
-      batterEnergy: map['ben'] as double,
-      reportedAt: DateTime.fromMillisecondsSinceEpoch(map['lup'] as int),
-    );
-  }
+  factory PPLiveDataModel.fromMap(final Map<String, dynamic> map) =>
+      PPLiveDataModel(
+        available: (map['aav'] as num).toDouble(),
+        solarOuput: (map['soo'] as num).toDouble(),
+        pcs: (map['pcs'] as num).toDouble(),
+        generator: (map['gnr'] as num).toDouble(),
+        batteryVoltage: (map['bvo'] as num).toDouble(),
+        batteryCurrent: (map['boc'] as num).toDouble(),
+        batteryCharge: (map['bch'] as num).toDouble(),
+        batterEnergy: (map['ben'] as num).toDouble(),
+        reportedAt: map['lup'] as String,
+      );
 }

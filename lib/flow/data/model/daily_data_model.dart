@@ -16,20 +16,19 @@ class PPDailyDataModel extends PPDailyDataEntity {
     required super.reportedAt,
   });
 
-  factory PPDailyDataModel.fromMap(Map<String, dynamic> map) =>
+  factory PPDailyDataModel.fromMap(final Map<String, dynamic> map) =>
       PPDailyDataModel(
-        solarProduction: map['solarProduction'] as double,
-        renewableHours: map['renewableHours'] as double,
-        batteryCharge: map['batteryCharge'] as double,
-        batteryDischarge: map['batteryDischarge'] as double,
-        sunHours: map['sunHours'] as double,
-        generatorEnergy: map['generatorEnergy'] as double,
-        generatorHours: map['generatorHours'] as double,
-        generatorFuel: map['generatorFuel'] as double,
-        consumption: map['consumption'] as double,
-        co2Saved: map['co2Saved'] as double,
-        co2Produced: map['co2Produced'] as double,
-        reportedAt:
-            DateTime.fromMillisecondsSinceEpoch(map['reportedAt'] as int),
+        solarProduction: (map['spr'] as num).toDouble(),
+        renewableHours: (map['rhr'] as num).toDouble(),
+        batteryCharge: (map['bch'] as num).toDouble(),
+        batteryDischarge: (map['bdc'] as num).toDouble(),
+        sunHours: (map['shr'] as num).toDouble(),
+        generatorEnergy: (map['gen'] as num).toDouble(),
+        generatorHours: (map['ghr'] as num).toDouble(),
+        generatorFuel: (map['gfl'] as num).toDouble(),
+        consumption: (map['con'] as num).toDouble(),
+        co2Saved: (map['cos'] as num).toDouble(),
+        co2Produced: (map['cop'] as num).toDouble(),
+        reportedAt: map['lup'] as String,
       );
 }
